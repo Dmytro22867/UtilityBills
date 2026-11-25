@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="UtilityBills.Core/UtilityBills.Core.csproj" />
+  <Project Path="UtilityBills/UtilityBills.csproj" />
+</Solution>

@@ -1,8 +1,8 @@
 ﻿using System.Text.Encodings.Web;
 using System.Text.Json;
-using UtilityBills.Meters;
+using UtilityBills.Core.Meters;
 
-namespace UtilityBills.Storage;
+namespace UtilityBills.Core.Storage;
 
 public class JsonMeterStorage : IMeterStorage
 {

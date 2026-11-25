@@ -1,4 +1,4 @@
-﻿namespace UtilityBills.Billing;
+﻿namespace UtilityBills.Core.Billing;
 
 public record MonthlySummary(int ProcessedCount, int ValidCount, double TotalAmount)
 {

@@ -1,6 +1,6 @@
-﻿using UtilityBills.Meters;
+﻿using UtilityBills.Core.Meters;
 
-namespace UtilityBills.Orders;
+namespace UtilityBills.Core.Orders;
 
 public class SequentialOrder : IBillingOrder
 {

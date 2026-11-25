@@ -17,3 +17,7 @@
 | Порядок перебору | `IReviewStrategy` | `IBillingOrder` |
 | Підсумок | `SessionSummary` | `MonthlySummary` |
 | Різновид 4 (ЛР 8) | `TrueFalseCard` | `ThreeZoneMeter` |
+
+## Інтерфейс застосунку
+
+![Консольна оболонка UtilityBills](docs/console.png)

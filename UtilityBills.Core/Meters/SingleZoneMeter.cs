@@ -1,4 +1,4 @@
-﻿namespace UtilityBills.Meters;
+﻿namespace UtilityBills.Core.Meters;
 
 public class SingleZoneMeter : Meter
 {

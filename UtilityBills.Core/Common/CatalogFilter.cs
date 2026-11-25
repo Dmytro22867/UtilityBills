@@ -1,4 +1,4 @@
-﻿namespace UtilityBills.Common;
+﻿namespace UtilityBills.Core.Common;
 
 public class CatalogFilter<T>
 {

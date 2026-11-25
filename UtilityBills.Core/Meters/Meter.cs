@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text.Json.Serialization;
 
-namespace UtilityBills.Meters;
+namespace UtilityBills.Core.Meters;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
 [JsonDerivedType(typeof(SingleZoneMeter), "single")]

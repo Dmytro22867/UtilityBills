@@ -1,6 +1,6 @@
-﻿using UtilityBills.Meters;
+﻿using UtilityBills.Core.Meters;
 
-namespace UtilityBills.Storage;
+namespace UtilityBills.Core.Storage;
 
 public interface IMeterStorage
 {

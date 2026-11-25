@@ -32,3 +32,8 @@
 - Додано атрибути `[JsonPolymorphic]` та `[JsonDerivedType]` до абстрактного класу `Meter` для збереження та відновлення всіх трьох похідних типів (`SingleZoneMeter`, `DualZoneMeter`, `StandingChargeMeter`) без втрати специфічних властивостей.
 - Створено інтерфейс сховища `IMeterStorage` та клас `JsonMeterStorage` у каталозі `Storage` на базі `System.Text.Json` із параметрами `WriteIndented = true` та `JavaScriptEncoder.UnsafeRelaxedJsonEscaping` для читабельного збереження кирилиці.
 - Реалізовано безпечне завантаження даних із перевіркою наявності файлу та обробкою `JsonException`, а також автоматичну ініціалізацію початкового набору записів при першому запуску.
+
+## Лабораторна робота № 6
+- Створено файл рішення `UtilityBills.sln` та виділено бібліотеку класів `UtilityBills.Core` (Class Library), куди перенесено всю предметну логіку (`Meters`, `Billing`, `Orders`, `Common`, `Storage`).
+- Забезпечено суворе розділення відповідальностей: бібліотека `UtilityBills.Core` не має жодних викликів `Console.*` та може використовуватися з будь-якою оболонкою.
+- Консольний проєкт `UtilityBills` переведено на бібліотеку `Spectre.Console` (інтерактивне меню `SelectionPrompt`, таблиці `Table`, інформаційні панелі `Panel`).
