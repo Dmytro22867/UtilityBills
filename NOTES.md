@@ -27,3 +27,8 @@
 - Створено інтерфейс `IBillingOrder` та дві реалізації стратегії перебору: `SequentialOrder` (послідовний) і `HighestRateFirstOrder` (сортування за спаданням тарифу через LINQ `OrderByDescending`).
 - Реалізовано узагальнений клас `CatalogFilter<T>` із використанням стандартного делегата `Func<T, bool>` для фільтрації колекцій.
 - Застосовано LINQ-запити (`Where`, `OrderByDescending`, `GroupBy`, `Select`, `Sum`) для формування аналітичного звіту за видами комунальних послуг.
+
+## Лабораторна робота № 5
+- Додано атрибути `[JsonPolymorphic]` та `[JsonDerivedType]` до абстрактного класу `Meter` для збереження та відновлення всіх трьох похідних типів (`SingleZoneMeter`, `DualZoneMeter`, `StandingChargeMeter`) без втрати специфічних властивостей.
+- Створено інтерфейс сховища `IMeterStorage` та клас `JsonMeterStorage` у каталозі `Storage` на базі `System.Text.Json` із параметрами `WriteIndented = true` та `JavaScriptEncoder.UnsafeRelaxedJsonEscaping` для читабельного збереження кирилиці.
+- Реалізовано безпечне завантаження даних із перевіркою наявності файлу та обробкою `JsonException`, а також автоматичну ініціалізацію початкового набору записів при першому запуску.

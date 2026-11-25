@@ -1,7 +1,12 @@
 ﻿using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace UtilityBills.Meters;
 
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+[JsonDerivedType(typeof(SingleZoneMeter), "single")]
+[JsonDerivedType(typeof(DualZoneMeter), "dual")]
+[JsonDerivedType(typeof(StandingChargeMeter), "standing")]
 public abstract class Meter
 {
     public int Id { get; set; }

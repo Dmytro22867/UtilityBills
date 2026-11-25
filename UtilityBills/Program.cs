@@ -2,22 +2,36 @@
 using UtilityBills.Common;
 using UtilityBills.Meters;
 using UtilityBills.Orders;
+using UtilityBills.Storage;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 Console.WriteLine("Облік комунальних платежів");
 
-var meters = new List<Meter>
+var dataPath = Path.Combine(AppContext.BaseDirectory, "data", "meters.json");
+IMeterStorage storage = new JsonMeterStorage(dataPath);
+
+var meters = storage.Load();
+if (meters.Count == 0)
 {
-    new SingleZoneMeter(1, "Холодна вода (кухня)", 31.20, 410, "м³")
-        { ServiceType = "Водопостачання" },
-    new DualZoneMeter(2, "Електроенергія (день/ніч)", 4.32, 2.16, 1200, 600, "День (Т1)", "Ніч (Т2)")
-        { ServiceType = "Електрика" },
-    new StandingChargeMeter(3, "Вивіз побутових відходів", 45.50, 2)
-        { ServiceType = "Утримання будинку" },
-    new SingleZoneMeter(4, "Газ (плита та колонка)", 7.96, 890, "м³")
-        { ServiceType = "Газопостачання" }
-};
+    meters = new List<Meter>
+    {
+        new SingleZoneMeter(1, "Холодна вода (кухня)", 31.20, 410, "м³")
+            { ServiceType = "Водопостачання" },
+        new DualZoneMeter(2, "Електроенергія (день/ніч)", 4.32, 2.16, 1200, 600, "День (Т1)", "Ніч (Т2)")
+            { ServiceType = "Електрика" },
+        new StandingChargeMeter(3, "Вивіз побутових відходів", 45.50, 2)
+            { ServiceType = "Утримання будинку" },
+        new SingleZoneMeter(4, "Газ (плита та колонка)", 7.96, 890, "м³")
+            { ServiceType = "Газопостачання" }
+    };
+    storage.Save(meters);
+    Console.WriteLine("Створено початковий файл даних meters.json.");
+}
+else
+{
+    Console.WriteLine($"Завантажено записів із файлу: {meters.Count}.");
+}
 
 var filter = new CatalogFilter<Meter>();
 var meteredOnly = filter.FindAll(meters, m => m is SingleZoneMeter or DualZoneMeter);
@@ -62,9 +76,12 @@ foreach (var meter in order.Arrange(meters))
     }
 }
 
+storage.Save(meters);
+
 Console.WriteLine();
 Console.WriteLine($"Підсумок: опрацьовано {summary.ValidCount} з {summary.ProcessedCount}, " +
                   $"до сплати разом: {summary.TotalAmount:F2} грн (середній платіж: {summary.AverageBill:F2} грн).");
+Console.WriteLine($"Дані збережено у: {dataPath}");
 
 if (billedItems.Count > 0)
 {
