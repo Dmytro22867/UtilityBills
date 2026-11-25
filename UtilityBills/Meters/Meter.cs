@@ -2,37 +2,30 @@
 
 namespace UtilityBills.Meters;
 
-public class Meter
+public abstract class Meter
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
     public string ServiceType { get; set; } = "Загальна";
-    public double Rate { get; set; }
-    public double PreviousReading { get; set; }
 
-    public Meter() { }
+    protected Meter() { }
 
-    public Meter(int id, string name, double rate, double previousReading = 0)
+    protected Meter(int id, string name)
     {
         Id = id;
         Name = name;
-        Rate = rate;
-        PreviousReading = previousReading;
     }
 
-    public double CalculateBill(string reading)
+    public abstract double CalculateBill(string reading);
+    public abstract string TariffDetails { get; }
+    public virtual string Prompt => "Введіть поточні показання";
+
+    protected static bool TryParseNumber(string text, out double value)
     {
-        var trimmed = reading.Trim();
-        if (!double.TryParse(trimmed, NumberStyles.Float, CultureInfo.CurrentCulture, out var current) &&
-            !double.TryParse(trimmed, NumberStyles.Float, CultureInfo.InvariantCulture, out current))
-        {
-            return -1;
-        }
-
-        var consumed = current - PreviousReading;
-        return consumed >= 0 ? Math.Round(consumed * Rate, 2) : -1;
+        var trimmed = text.Trim();
+        return double.TryParse(trimmed, NumberStyles.Float, CultureInfo.CurrentCulture, out value) ||
+               double.TryParse(trimmed, NumberStyles.Float, CultureInfo.InvariantCulture, out value);
     }
 
-    public override string ToString() =>
-        $"#{Id} [{ServiceType}] {Name} (тариф: {Rate} грн, попередні: {PreviousReading})";
+    public override string ToString() => $"#{Id} [{ServiceType}] {Name}";
 }
