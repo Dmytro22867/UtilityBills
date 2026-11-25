@@ -21,3 +21,5 @@
 ## Інтерфейс застосунку
 
 ![Консольна оболонка UtilityBills](docs/console.png)
+
+![Графічний інтерфейс UtilityBills на Avalonia UI](docs/Lab_9.png)

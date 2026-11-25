@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="UtilityBills.Core/UtilityBills.Core.csproj" />
+  <Project Path="UtilityBills.Gui/UtilityBills.Gui.csproj" />
   <Project Path="UtilityBills.Tests/UtilityBills.Tests.csproj" />
   <Project Path="UtilityBills/UtilityBills.csproj" />
 </Solution>
