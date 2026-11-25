@@ -123,4 +123,32 @@ public class MeterTests
                 File.Delete(tempFile);
         }
     }
+
+    [Fact]
+    public void ThreeZoneMeter_ValidReadingsAndJsonSerialization_WorkCorrectly()
+    {
+        var meter = new ThreeZoneMeter(4, "Тризонний лічильник", 6.48, 4.32, 1.73, 100, 200, 300);
+
+        Assert.Equal("Пік", meter[1]);
+        Assert.Equal("Напівпік", meter[2]);
+        Assert.Equal("Ніч", meter[3]);
+        Assert.Equal(1253.00, meter.CalculateBill("200 300 400"));
+        Assert.Equal(-1, meter.CalculateBill("200 300"));
+
+        var tempFile = Path.Combine(Path.GetTempPath(), $"three_zone_{Guid.NewGuid()}.json");
+        try
+        {
+            var storage = new JsonMeterStorage(tempFile);
+            storage.Save([meter]);
+            var loaded = storage.Load();
+
+            Assert.Single(loaded);
+            Assert.IsType<ThreeZoneMeter>(loaded[0]);
+        }
+        finally
+        {
+            if (File.Exists(tempFile))
+                File.Delete(tempFile);
+        }
+    }
 }

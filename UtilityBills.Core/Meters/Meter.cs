@@ -7,6 +7,7 @@ namespace UtilityBills.Core.Meters;
 [JsonDerivedType(typeof(SingleZoneMeter), "single")]
 [JsonDerivedType(typeof(DualZoneMeter), "dual")]
 [JsonDerivedType(typeof(StandingChargeMeter), "standing")]
+[JsonDerivedType(typeof(ThreeZoneMeter), "three")]
 public abstract class Meter
 {
     public int Id { get; set; }

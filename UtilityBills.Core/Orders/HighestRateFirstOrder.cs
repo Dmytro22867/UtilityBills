@@ -13,6 +13,7 @@ public class HighestRateFirstOrder : IBillingOrder
     {
         SingleZoneMeter s => s.Rate,
         DualZoneMeter d => Math.Max(d.DayRate, d.NightRate),
+        ThreeZoneMeter t => Math.Max(t.PeakRate, Math.Max(t.HalfPeakRate, t.NightRate)),
         StandingChargeMeter f => f.MonthlyFee,
         _ => 0
     };
