@@ -1,5 +1,7 @@
 ﻿using UtilityBills.Billing;
+using UtilityBills.Common;
 using UtilityBills.Meters;
+using UtilityBills.Orders;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -12,14 +14,28 @@ var meters = new List<Meter>
     new DualZoneMeter(2, "Електроенергія (день/ніч)", 4.32, 2.16, 1200, 600, "День (Т1)", "Ніч (Т2)")
         { ServiceType = "Електрика" },
     new StandingChargeMeter(3, "Вивіз побутових відходів", 45.50, 2)
-        { ServiceType = "Утримання будинку" }
+        { ServiceType = "Утримання будинку" },
+    new SingleZoneMeter(4, "Газ (плита та колонка)", 7.96, 890, "м³")
+        { ServiceType = "Газопостачання" }
 };
 
-Console.WriteLine($"Лічильників у списку: {meters.Count}.");
+var filter = new CatalogFilter<Meter>();
+var meteredOnly = filter.FindAll(meters, m => m is SingleZoneMeter or DualZoneMeter);
+Console.WriteLine($"Усього послуг: {meters.Count}, з них із лічильниками показань: {meteredOnly.Count}.");
+
+Console.Write("Оберіть порядок перебору (1 - за списком, 2 - від найдорожчого тарифу): ");
+var mode = Console.ReadLine()?.Trim();
+
+IBillingOrder order = mode == "2"
+    ? new HighestRateFirstOrder()
+    : new SequentialOrder();
+
+Console.WriteLine($"Обрано режим: {order.Title}");
 
 var summary = new MonthlySummary(0, 0, 0);
+var billedItems = new List<(Meter Meter, double Amount)>();
 
-foreach (var meter in meters)
+foreach (var meter in order.Arrange(meters))
 {
     Console.WriteLine();
     Console.WriteLine($"{meter} — {meter.TariffDetails}");
@@ -35,11 +51,30 @@ foreach (var meter in meters)
     var bill = meter.CalculateBill(given);
     summary += bill;
 
-    Console.WriteLine(bill >= 0
-        ? $"Нараховано: {bill:F2} грн."
-        : "Помилка: некоректні дані для розрахунку.");
+    if (bill >= 0)
+    {
+        billedItems.Add((meter, bill));
+        Console.WriteLine($"Нараховано: {bill:F2} грн.");
+    }
+    else
+    {
+        Console.WriteLine("Помилка: некоректні дані для розрахунку.");
+    }
 }
 
 Console.WriteLine();
 Console.WriteLine($"Підсумок: опрацьовано {summary.ValidCount} з {summary.ProcessedCount}, " +
                   $"до сплати разом: {summary.TotalAmount:F2} грн (середній платіж: {summary.AverageBill:F2} грн).");
+
+if (billedItems.Count > 0)
+{
+    Console.WriteLine();
+    Console.WriteLine("Аналітика за видами послуг (LINQ GroupBy):");
+    var byService = billedItems
+        .GroupBy(x => x.Meter.ServiceType)
+        .Select(g => new { Service = g.Key, Total = g.Sum(x => x.Amount), Count = g.Count() })
+        .OrderByDescending(x => x.Total);
+
+    foreach (var group in byService)
+        Console.WriteLine($"  • {group.Service}: {group.Total:F2} грн (позицій: {group.Count})");
+}
